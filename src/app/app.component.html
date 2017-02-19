@@ -1,0 +1,46 @@
+<!--<md-toolbar>-->
+    <!--<a [routerLink]=" ['./'] "-->
+       <!--routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">-->
+      <!--Index-->
+    <!--</a>-->
+    <!--<a [routerLink]=" ['./home'] "-->
+       <!--routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">-->
+      <!--Home-->
+    <!--</a>-->
+    <!--<a [routerLink]=" ['./detail'] "-->
+       <!--routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">-->
+      <!--Detail-->
+    <!--</a>-->
+    <!--<a [routerLink]=" ['./barrel'] "-->
+       <!--routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">-->
+      <!--Barrel-->
+    <!--</a>-->
+    <!--<a [routerLink]=" ['./about'] "-->
+       <!--routerLinkActive="active" [routerLinkActiveOptions]= "{exact: true}">-->
+      <!--About-->
+    <!--</a>-->
+<!--</md-toolbar>-->
+
+<md-toolbar  [color]="myColor">
+  <span>Application Title</span>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="example-fill-remaining-space"></span>
+
+  <span>Right Aligned Text</span>
+</md-toolbar>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<!--<input (keyup)="onKey($event)">-->
+<!--&lt;!&ndash;<input [(name)]="drinkSearch" [(value)]="drinkSearch"/>&ndash;&gt;-->
+<!--<button md-button (click)="searchForDrink()">Search for Drink</button>-->
+
+<!--<md-card>Hello, World</md-card>-->
+
+<!--<li *ngFor="let drink of drinks">-->
+  <!--{{drink.name}}-->
+<!--</li>-->
+

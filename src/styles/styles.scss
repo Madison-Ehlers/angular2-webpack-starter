@@ -17,3 +17,55 @@ nav a {
   text-decoration: none;
   border-radius: 4px;
 }
+
+.example-fill-remaining-space {
+  // This fills the remaining space, by using flexbox.
+  // Every toolbar row uses a flexbox row layout.
+  flex: 1 1 auto;
+}
+
+
+md-toolbar {
+
+  background-color: rebeccapurple;
+}
+
+md-toolbar-row {
+  color: white;
+}
+
+
+.flex-container {
+  display: -webkit-flex;
+  display: flex;
+  height: 250px;
+}
+
+.flex-item {
+  height: 200px;
+  margin: 10px;
+}
+
+md-card {
+  height: 70%;
+  width: 100%;
+  display: flex;
+}
+
+.Aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Aligner-item {
+  max-width: 50%;
+}
+
+.Aligner-item--top {
+  align-self: flex-start;
+}
+
+.Aligner-item--bottom {
+  align-self: flex-end;
+}
