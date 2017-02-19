@@ -6,7 +6,7 @@ export class Skill {
   public name: string;
   public value: number;
 
-  constructor(id?: string, name?: string, value?: number){
+  constructor(id?: string, name?: string, value?: number) {
     this.id = id;
     this.name = name;
     this.value = value;

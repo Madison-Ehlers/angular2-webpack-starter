@@ -11,8 +11,48 @@
   <!--<div class="flex-item"><md-card>Card 7</md-card></div>-->
   <!--<div class="flex-item"><md-card>Card 8</md-card></div>-->
 <!--</div>-->
+<div>
+  <md-card>
+    <md-card-header>
+      Search For Drinks
+    </md-card-header>
+    <input (keyup)="onKey($event)">
+    <button md-button (click)="searchForDrink()">Search for Drink</button>
+  </md-card>
+</div>
+<div *ngFor="let drink of drinks">
+  <div class="flex-item Aligner">
+    <md-card>
+      <md-card-header>
+        <img md-card-avatar src="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png">
+        <md-card-title>{{drink.name}}</md-card-title>
+        <md-card-subtitle><a href="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png"> click for Picture</a></md-card-subtitle>
+      </md-card-header>
+      <md-card-content>
+        <div class="Aligner">
 
-<div class="flex-item Aligner"><md-card>Card 5</md-card></div>
-<div class="flex-item Aligner"><md-card>Card 6</md-card></div>
-<div class="flex-item Aligner"><md-card>Card 7</md-card></div>
-<div class="flex-item Aligner"><md-card>Card 8</md-card></div>
+          <md-tab-group>
+            <md-tab label="Overview">
+              <p>{{drink.descriptionPlain}}</p>
+              <p>Skill required to make drink: {{drink.skill.name}}</p>
+              <h4>Ingredients</h4>
+              <li *ngFor="let ingredient of drink.ingredients">
+                {{ingredient.textPlain}}
+              </li><br>
+
+              <h4>Tastes</h4>
+              <li *ngFor="let taste of drink.tastes">
+                {{taste.text}}
+              </li><br>
+              <p>Served in a {{drink.servedIn.text}}</p>
+
+
+            </md-tab>
+            <md-tab label="Video"><a>Video</a></md-tab>
+          </md-tab-group>
+
+        </div>
+      </md-card-content>
+    </md-card>
+  </div>
+</div>

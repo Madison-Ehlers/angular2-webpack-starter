@@ -5,7 +5,7 @@
 import { Skill } from './skill';
 import { Video } from './video';
 import { Tag } from './tag';
-import { Glass } from './glass';
+import { ServedIn } from './glass';
 import { Ingredient } from './ingredient';
 import { Taste } from './taste';
 import { Occasion } from './occasion';
@@ -22,7 +22,7 @@ export class Drink {
   public isCarbonated: boolean;
   public isHot: boolean;
   public tags: Tag[];
-  public glass: Glass;
+  public servedIn: ServedIn;
   public ingredients: Ingredient[];
   public tastes: Taste[];
   public occasions: Occasion[];
@@ -43,7 +43,7 @@ export class Drink {
               isCarbonated?: boolean,
               isHot?: boolean,
               tags?: Tag[],
-              glass?: Glass,
+              glass?: ServedIn,
               ingredients?: Ingredient[],
               tastes?: Taste[],
               occasions?: Occasion[],
@@ -64,7 +64,7 @@ export class Drink {
     this.isCarbonated = isCarbonated;
     this.isHot = isHot;
     this.tags = tags;
-    this.glass = glass;
+    this.servedIn = glass;
     this.ingredients = ingredients;
     this.tastes = tastes;
     this.occasions = occasions;

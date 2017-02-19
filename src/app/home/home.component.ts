@@ -6,7 +6,8 @@ import {
 import { AppState } from '../app.service';
 import { Title } from './title';
 import { DrinkService } from '../services/get-drinks.service';
-import { Drink } from './objects/drink';
+import { Drink } from '../objects/drink';
+import { Video } from '../objects/video';
 
 @Component({
   // The selector is what angular internally uses
@@ -26,6 +27,11 @@ import { Drink } from './objects/drink';
 export class HomeComponent implements OnInit {
   // Set our default values
   public localState = { value: '' };
+
+  public errorMessage: string;
+  public mode = 'Observable';
+  public drinks: Drink [] = [];
+  public drinkSearch: string = '';
   // TypeScript public modifiers
   constructor(
     public appState: AppState,
@@ -34,9 +40,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    console.log('hello `Home` component');
-    this.getDrinks();
-    // this.title.getData().subscribe(data => this.data = data);
+    this.getDrinks(); // load drinks up
   }
 
   public submitState(value: string) {
@@ -47,8 +51,26 @@ export class HomeComponent implements OnInit {
   public getDrinks() {
     this.drinkService.getAllDrinks()
       .subscribe(
+        (drinks) => {
+          this.drinks = drinks;
+          console.log(this.drinks);
+        },
+        (error) => {
+          this.errorMessage = <any> error;
+        }
+      );
+  }
+
+  public searchForDrink() {
+    console.log('Value of drink search: ' + this.drinkSearch);
+    this.drinkService
+      .searchForDrink(this.drinkSearch)
+      .subscribe(
         (drinks) => this.drinks = drinks,
         (error) => this.errorMessage = <any> error
       );
+  }
+  public onKey(event: any) { // without type info
+    this.drinkSearch = event.target.value;
   }
 }
