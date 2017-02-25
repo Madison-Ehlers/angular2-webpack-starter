@@ -3,7 +3,7 @@
  */
 import { Injectable } from '@angular/core';
 
-import { Http, Response, Headers }          from '@angular/http';
+import {Http, Response, Headers, URLSearchParams, Jsonp}          from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -25,12 +25,15 @@ export class DrinkService {
   private baseUrl = 'http://addb.absolutdrinks.com/';
   private apiCredentials = '?apiKey=8b097f6e64974a8a8f15d806c2888562';
   private language = '&lang=en';
+  private times: number;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private jsonp: Jsonp) {
+    this.times = 0;
   }
   public getAllDrinks(): Observable<Drink[]> {
     let headers = new Headers({  });
     let drinks: Drink[] = [];
+
     return this.http.get(
         this.proxyUrl
         + this.baseUrl
@@ -46,7 +49,20 @@ export class DrinkService {
       })
       .catch(this.handleError);
   }
-
+  search (term: string) {
+    let wikiUrl = 'http://en.wikipedia.org/w/api.php';
+    let params = new URLSearchParams();
+     params.set('search', term); // the user's search value
+     params.set('action', 'opensearch');
+    params.set('format', 'json');
+    params.set('callback', '__ng_jsonp__.__req$'+ this.times + '.finished');
+    // params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562');
+    this.times=this.times+1;
+// TODO: Add error handling
+    return this.jsonp
+      .get(wikiUrl, { search: params })
+      .map(response => <string[]> response.json()[1]);
+  }
   public searchForDrink(name: string): Observable<Drink[]> {
     let drinks: Drink[] = [];
     return this.http

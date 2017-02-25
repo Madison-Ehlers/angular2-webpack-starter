@@ -11,6 +11,7 @@ import { Taste } from './taste';
 import { Occasion } from './occasion';
 import { Tool } from './tool';
 import { Action } from './action';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 export class Drink {
   public description: string;
@@ -33,6 +34,7 @@ export class Drink {
   public id: string;
   public name: string;
   public descriptionPlain: string;
+  public youtubeLink: SafeResourceUrl;
 
   constructor(description?: string,
               story?: string,
@@ -75,6 +77,7 @@ export class Drink {
     this.id = id;
     this.name = name;
     this.descriptionPlain = descriptionPlain;
+    this.youtubeLink = null;
 
   }
 }

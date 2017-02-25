@@ -8,6 +8,8 @@ import { Title } from './title';
 import { DrinkService } from '../services/get-drinks.service';
 import { Drink } from '../objects/drink';
 import { Video } from '../objects/video';
+import {DomSanitizer} from "@angular/platform-browser";
+import {Observable} from "rxjs";
 
 @Component({
   // The selector is what angular internally uses
@@ -22,7 +24,17 @@ import { Video } from '../objects/video';
   // Our list of styles in our component. We may add more to compose many styles together
   styleUrls: [ './home.component.css' ],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
-  templateUrl: './home.component.html'
+  // templateUrl: './home.component.html'
+  template:
+    `
+      <h1>Wikipedia Demo</h1>
+      <p>Search after each keystroke</p>
+      <input #term (keyup)="search(term.value)"/>
+      <ul>
+        <li *ngFor="let item of items | async">{{item}}</li>
+      </ul>
+
+    `
 })
 export class HomeComponent implements OnInit {
   // Set our default values
@@ -32,15 +44,17 @@ export class HomeComponent implements OnInit {
   public mode = 'Observable';
   public drinks: Drink [] = [];
   public drinkSearch: string = '';
+  public searching: boolean = false;
+  items: Observable<string[]>;
   // TypeScript public modifiers
   constructor(
     public appState: AppState,
     public title: Title,
-    private drinkService: DrinkService
+    private drinkService: DrinkService,
   ) { }
 
   public ngOnInit() {
-    this.getDrinks(); // load drinks up
+    //this.getDrinks(); // load drinks up
   }
 
   public submitState(value: string) {
@@ -60,13 +74,20 @@ export class HomeComponent implements OnInit {
         }
       );
   }
-
+  search (term: string) {
+    this.items = this.drinkService.search(term);
+  }
   public searchForDrink() {
     console.log('Value of drink search: ' + this.drinkSearch);
+    this.searching = true;
+    this.drinks = [];
     this.drinkService
       .searchForDrink(this.drinkSearch)
       .subscribe(
-        (drinks) => this.drinks = drinks,
+        (drinks) => {
+          this.drinks = drinks;
+          this.searching = false;
+        },
         (error) => this.errorMessage = <any> error
       );
   }

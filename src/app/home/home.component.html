@@ -1,16 +1,3 @@
-
-<!--<div class="flex-container">-->
-  <!--<div class="flex-item"><md-card>Card 1</md-card></div>-->
-  <!--<div class="flex-item"><md-card>Card 2</md-card></div>-->
-  <!--<div class="flex-item"><md-card>Card 3</md-card></div>-->
-  <!--<div class="flex-item"><md-card>Card 4</md-card></div>-->
-<!--</div>-->
-<!--<div class="flex-container">-->
-  <!--<div class="flex-item"><md-card>Card 5</md-card></div>-->
-  <!--<div class="flex-item"><md-card>Card 6</md-card></div>-->
-  <!--<div class="flex-item"><md-card>Card 7</md-card></div>-->
-  <!--<div class="flex-item"><md-card>Card 8</md-card></div>-->
-<!--</div>-->
 <div>
   <md-card>
     <md-card-header>
@@ -18,6 +5,8 @@
     </md-card-header>
     <input (keyup)="onKey($event)">
     <button md-button (click)="searchForDrink()">Search for Drink</button>
+    <div *ngIf="searching" class="loader">
+    </div>
   </md-card>
 </div>
 <div *ngFor="let drink of drinks">
@@ -26,7 +15,6 @@
       <md-card-header>
         <img md-card-avatar src="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png">
         <md-card-title>{{drink.name}}</md-card-title>
-        <md-card-subtitle><a href="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png"> click for Picture</a></md-card-subtitle>
       </md-card-header>
       <md-card-content>
         <div class="Aligner">
@@ -48,7 +36,9 @@
 
 
             </md-tab>
-            <md-tab label="Video"><a>Video</a></md-tab>
+            <md-tab label="Video">
+              <iframe width="640" height="360" [src]="drink.youtubeLink" frameborder="0" allowfullscreen></iframe>
+            </md-tab>
           </md-tab-group>
 
         </div>
