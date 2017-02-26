@@ -8,7 +8,7 @@ import { Title } from './title';
 import { DrinkService } from '../services/get-drinks.service';
 import { Drink } from '../objects/drink';
 import { Video } from '../objects/video';
-import {Observable} from "rxjs";
+import { Observable } from 'rxjs';
 
 @Component({
   // The selector is what angular internally uses
@@ -44,7 +44,9 @@ export class HomeComponent implements OnInit {
 
   public ngOnInit() {
     this.drinkService.getAllIngredients()
-      .subscribe(() => {});
+      .subscribe((ingredients) => {
+        console.log(ingredients);
+      });
   }
 
   public submitState(value: string) {

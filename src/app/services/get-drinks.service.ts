@@ -3,7 +3,7 @@
  */
 import { Injectable } from '@angular/core';
 
-import {Http, Response, Headers, URLSearchParams, Jsonp}          from '@angular/http';
+import { Http, Response, Headers, URLSearchParams, Jsonp }          from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -18,7 +18,7 @@ import { Tag } from '../objects/tag';
 import { Ingredient } from '../objects/ingredient';
 import { Taste } from '../objects/taste';
 import { Occasion } from '../objects/occasion';
-import {DomSanitizer} from "@angular/platform-browser";
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
 export class DrinkService {
@@ -29,26 +29,16 @@ export class DrinkService {
     this.times = 0;
   }
 
-  private getParamsForRequest() : URLSearchParams{
-    let params = new URLSearchParams();
-    params.set('format', 'json'); //json response
-    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562'); //api key
-    params.set('callback', '__ng_jsonp__.__req'+ this.times + '.finished'); //callback
-    this.times=this.times+1;
-    return params;
-  }
-
-  public getAllIngredients(): Observable<Ingredient[]> {
+  public getAllIngredients(): Observable <Ingredient[]> {
     let ingredients: Ingredient[] = [];
     return this.jsonp.get(
       this.baseUrl + 'ingredients/', {search: this.getParamsForRequest()})
       .map((res: Response) => {
         let body = res.json();
-        console.log("Getting all ingredients");
         console.log(body);
 
         return ingredients;
-      })
+      });
   }
   public getAllDrinks(): Observable<Drink[]> {
     let drinks: Drink[] = [];
@@ -103,14 +93,11 @@ export class DrinkService {
     let videos: Video[] = [];
     obj.videos.forEach((vid: Video) => {
       videos.push(new Video(vid.video, vid.type));
-      if(vid.type == 'youtube'){
-        // obj.youtubeLink = vid.video;
+      if ( vid.type === 'youtube' ) {
         let dangerousVideoUrl = 'https://www.youtube.com/embed/' + vid.video;
         obj.youtubeLink = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousVideoUrl);
     }
     });
-
-
     let tags: Tag[] = [];
     obj.tags.forEach((tag: Tag) => {
       tags.push(new Tag(tag.name, tag.owner));
@@ -186,5 +173,13 @@ export class DrinkService {
       errMsg = error.message ? error.message : error.toString();
     }
     return Observable.throw(errMsg);
+  }
+  private getParamsForRequest(): URLSearchParams {
+    let params = new URLSearchParams();
+    params.set('format', 'json'); // json response
+    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562'); // api key
+    params.set('callback', '__ng_jsonp__.__req' + this.times + '.finished'); // callback
+    this.times = this.times + 1;
+    return params;
   }
 }
