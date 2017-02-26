@@ -35,12 +35,11 @@ export class AppComponent implements OnInit {
   public myColor: string = 'accent';
 
   constructor(
-    public appState: AppState,
     private drinkService: DrinkService
   ) {}
 
   public ngOnInit() {
-    console.log('Initial App State', this.appState.state);
+    console.log('Initializing');
   }
   public getDrinks() {
     this.drinkService.getAllDrinks()

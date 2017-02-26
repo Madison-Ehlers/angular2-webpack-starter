@@ -8,7 +8,7 @@
     <div>
       <input #term (keyup.enter)="searchForDrink(term.value)"/>
       <div style="" *ngIf="searching" class="loader">
-    </div>
+      </div>
     </div>
   </md-card>
 </div>
@@ -39,8 +39,8 @@
 
 
             </md-tab>
-            <md-tab label="Video" class="vid-container">
-              <iframe *ngIf="drink.youtubeLink" width="xxx" height="xxx" [src]="drink.youtubeLink" frameborder="0" allowfullscreen></iframe>
+            <md-tab label="Video">
+              <iframe *ngIf="drink.youtubeLink" width="640" height="360" [src]="drink.youtubeLink" frameborder="0" allowfullscreen></iframe>
               <div *ngIf="!drink.youtubeLink">No video for this drink, Sorry!</div>
             </md-tab>
           </md-tab-group>

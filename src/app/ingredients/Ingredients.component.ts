@@ -1,8 +1,10 @@
+/**
+ * Created by mjehl on 2/26/2017.
+ */
 import {
   Component,
   OnInit
 } from '@angular/core';
-
 import { Title } from './title';
 import { DrinkService } from '../services/get-drinks.service';
 import { Drink } from '../objects/drink';
@@ -16,17 +18,16 @@ import { Observable } from 'rxjs';
     Title
   ],
   // Our list of styles in our component. We may add more to compose many styles together
-  styleUrls: [ './home.component.css' ],
-  templateUrl: 'home.component.html',
+  styleUrls: [ './ingredients.component.css' ],
+  templateUrl: 'ingredients.component.html',
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
 
 })
-export class HomeComponent implements OnInit {
+export class IngredientsComponent implements OnInit {
   // Set our default values
 
   public errorMessage: string;
   public mode = 'Observable';
-  public drinks: Drink[];
   public searching: boolean = false;
 
   // TypeScript public modifiers
@@ -40,34 +41,5 @@ export class HomeComponent implements OnInit {
       .subscribe((ingredients) => {
         console.log(ingredients);
       });
-  }
-
-  public submitState(value: string) {
-    console.log('submitState', value);
-  }
-  public getDrinks() {
-    this.drinkService.getAllDrinks()
-      .subscribe(
-        (drinks) => {
-          this.drinks = drinks;
-          console.log(this.drinks);
-        },
-        (error) => {
-          this.errorMessage = <any> error;
-        }
-      );
-  }
-  public searchForDrink(searchItem: string) {
-    this.searching = true;
-    this.drinkService
-      .searchForDrink(searchItem)
-      .subscribe(
-        (drinks) => {
-          this.drinks = drinks;
-          console.log(drinks);
-          this.searching = false;
-        },
-        (error) => this.errorMessage = <any> error
-      );
   }
 }
