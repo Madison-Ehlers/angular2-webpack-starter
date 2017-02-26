@@ -1,17 +1,19 @@
-<div>
-  <md-card>
+<div class="">
+  <md-card  class=" Aligner centered-item">
     <md-card-header>
       Search For Drinks
     </md-card-header>
-    <h1>Drink Mixer Demo</h1>
-    <p>Search after each keystroke</p>
-    <input #term (keyup.enter)="searchForDrink(term.value)"/>
-    <div *ngIf="searching" class="loader">
+    <p>Drink Mixer Demo</p>
+    <p>Search after enter</p>
+    <div>
+      <input #term (keyup.enter)="searchForDrink(term.value)"/>
+      <div style="" *ngIf="searching" class="loader">
+    </div>
     </div>
   </md-card>
 </div>
 <div *ngFor="let drink of drinks">
-  <div class="flex-item Aligner">
+  <div class="Aligner centered-item">
     <md-card>
       <md-card-header>
         <img md-card-avatar src="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png">

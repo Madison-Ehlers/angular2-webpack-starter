@@ -6,6 +6,10 @@ export class Ingredient {
   public id: string;
   public text: string;
   public textPlain: string;
+  public isAlcoholic?: boolean;
+  public description?: string;
+  public isCarbonated?: string;
+
   constructor(type?: string, id?: string, text?: string, textPlain?: string) {
     this.type = type;
     this.id = id;

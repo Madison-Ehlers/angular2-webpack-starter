@@ -22,53 +22,71 @@ import {DomSanitizer} from "@angular/platform-browser";
 
 @Injectable()
 export class DrinkService {
-  private proxyUrl = 'https://crossorigin.me/';
   private baseUrl = 'http://addb.absolutdrinks.com/';
-  private apiCredentials = '?apiKey=8b097f6e64974a8a8f15d806c2888562';
-  private language = '&lang=en';
   private times: number;
 
   constructor(private http: Http, private jsonp: Jsonp, private sanitizer: DomSanitizer) {
     this.times = 0;
   }
-  public getAllDrinks(): Observable<Drink[]> {
-    let headers = new Headers({  });
-    let drinks: Drink[] = [];
+
+  private getParamsForRequest() : URLSearchParams{
     let params = new URLSearchParams();
-    params.set('format', 'json');
-    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562');
-    params.set('callback', '__ng_jsonp__.__req'+ this.times + '.finished');
-    // params.set('callback', 'JSONP_CALLBACK')
+    params.set('format', 'json'); //json response
+    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562'); //api key
+    params.set('callback', '__ng_jsonp__.__req'+ this.times + '.finished'); //callback
     this.times=this.times+1;
+    return params;
+  }
+
+  public getAllIngredients(): Observable<Ingredient[]> {
+    let ingredients: Ingredient[] = [];
+    return this.jsonp.get(
+      this.baseUrl + 'ingredients/', {search: this.getParamsForRequest()})
+      .map((res: Response) => {
+        let body = res.json();
+        console.log("Getting all ingredients");
+        console.log(body);
+
+        return ingredients;
+      })
+  }
+  public getAllDrinks(): Observable<Drink[]> {
+    let drinks: Drink[] = [];
     return this.jsonp.get(
       this.baseUrl
-        + 'drinks/', {search: params})
+        + 'drinks/', {search: this.getParamsForRequest()})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;
         objects.forEach((drink: Drink) => {
           drinks.push(this.getDrinkFromJson(drink));
         });
-        console.log("Drinks");
-        console.log(drinks);
         return drinks;
       })
       .catch(this.handleError);
   }
 
+  public searchForIngredient(name: string): Observable<Ingredient[]> {
+    let ingredients: Ingredient[] = [];
+    return this.jsonp.get(
+      this.baseUrl
+      + 'quickSearch/ingredients/'
+      + name, {search: this.getParamsForRequest()})
+      .map((res: Response) => {
+        let body = res.json();
+        let objects = body.result;
+        console.log(body);
+        return ingredients;
+      })
+      .catch(this.handleError);
+  }
+
   public searchForDrink(name: string): Observable<Drink[]> {
-    let headers = new Headers({  });
     let drinks: Drink[] = [];
-    let params = new URLSearchParams();
-    params.set('format', 'json');
-    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562');
-    params.set('callback', '__ng_jsonp__.__req'+ this.times + '.finished');
-    // params.set('callback', 'JSONP_CALLBACK')
-    this.times=this.times+1;
     return this.jsonp.get(
       this.baseUrl
       + 'quickSearch/drinks/'
-      + name, {search: params})
+      + name, {search: this.getParamsForRequest()})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;

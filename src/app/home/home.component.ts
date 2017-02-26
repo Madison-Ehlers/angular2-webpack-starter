@@ -24,54 +24,7 @@ import {Observable} from "rxjs";
   styleUrls: [ './home.component.css' ],
   templateUrl: 'home.component.html',
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
-  // templateUrl: './home.component.html'
-//   template:
-//     `
-//       <h1>Wikipedia Demo</h1>
-//       <p>Search after each keystroke</p>
-//       <input #term (keyup)="search(term.value)"/>
-//       <!--<ul>-->
-//         <!--<li *ngFor="let item of items | async">{{item.name}}</li>-->
-//       <!--</ul>-->
-//  <div *ngFor="let drink of drinks | async">
-//   <div class="flex-item Aligner">
-//     <md-card>
-//       <md-card-header>
-//         <img md-card-avatar src="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png">
-//         <md-card-title>{{drink.name}}</md-card-title>
-//       </md-card-header>
-//       <md-card-content>
-//         <div class="Aligner">
-//
-//           <md-tab-group>
-//             <md-tab label="Overview">
-//               <p>{{drink.descriptionPlain}}</p>
-//               <p>Skill required to make drink: {{drink.skill.name}}</p>
-//               <h4>Ingredients</h4>
-//               <li *ngFor="let ingredient of drink.ingredients">
-//                 {{ingredient.textPlain}}
-//               </li><br>
-//
-//               <h4>Tastes</h4>
-//               <li *ngFor="let taste of drink.tastes">
-//                 {{taste.text}}
-//               </li><br>
-//               <p>Served in a {{drink.servedIn.text}}</p>
-//
-//
-//             </md-tab>
-//             <md-tab label="Video">
-//               <iframe width="640" height="360" [src]="drink.youtubeLink" frameborder="0" allowfullscreen></iframe>
-//             </md-tab>
-//           </md-tab-group>
-//
-//         </div>
-//       </md-card-content>
-//     </md-card>
-//   </div>
-// </div>
-//
-//     `
+
 })
 export class HomeComponent implements OnInit {
   // Set our default values
@@ -80,9 +33,8 @@ export class HomeComponent implements OnInit {
   public errorMessage: string;
   public mode = 'Observable';
   public drinks: Drink[];
-  public drinkSearch: string = '';
   public searching: boolean = false;
-  items: Drink[];
+
   // TypeScript public modifiers
   constructor(
     public appState: AppState,
@@ -91,7 +43,8 @@ export class HomeComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    this.getDrinks(); // load drinks up
+    this.drinkService.getAllIngredients()
+      .subscribe(() => {});
   }
 
   public submitState(value: string) {
@@ -111,17 +64,8 @@ export class HomeComponent implements OnInit {
         }
       );
   }
-  // search (term: string) {
-  //   this.drinks = this.drinkService.search(term)
-  //     .subscribe(
-  //       (drinks) => {this.drinks = drinks},
-  //       (error) => this.errorMessage = <any> error
-  //     );
-  // }
   public searchForDrink(searchItem: string) {
-    console.log('Value of drink search: ' + this.drinkSearch);
     this.searching = true;
-    //this.drinks = [];
     this.drinkService
       .searchForDrink(searchItem)
       .subscribe(
@@ -131,8 +75,5 @@ export class HomeComponent implements OnInit {
         },
         (error) => this.errorMessage = <any> error
       );
-  }
-  public onKey(event: any) { // without type info
-    this.drinkSearch = event.target.value;
   }
 }
