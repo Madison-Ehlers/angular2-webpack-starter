@@ -3,8 +3,9 @@
     <md-card-header>
       Search For Drinks
     </md-card-header>
-    <input (keyup)="onKey($event)">
-    <button md-button (click)="searchForDrink()">Search for Drink</button>
+    <h1>Drink Mixer Demo</h1>
+    <p>Search after each keystroke</p>
+    <input #term (keyup.enter)="searchForDrink(term.value)"/>
     <div *ngIf="searching" class="loader">
     </div>
   </md-card>

@@ -18,6 +18,7 @@ import { Tag } from '../objects/tag';
 import { Ingredient } from '../objects/ingredient';
 import { Taste } from '../objects/taste';
 import { Occasion } from '../objects/occasion';
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Injectable()
 export class DrinkService {
@@ -27,52 +28,47 @@ export class DrinkService {
   private language = '&lang=en';
   private times: number;
 
-  constructor(private http: Http, private jsonp: Jsonp) {
+  constructor(private http: Http, private jsonp: Jsonp, private sanitizer: DomSanitizer) {
     this.times = 0;
   }
   public getAllDrinks(): Observable<Drink[]> {
     let headers = new Headers({  });
     let drinks: Drink[] = [];
-
-    return this.http.get(
-        this.proxyUrl
-        + this.baseUrl
-        + 'drinks/'
-        + this.apiCredentials)
+    let params = new URLSearchParams();
+    params.set('format', 'json');
+    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562');
+    params.set('callback', '__ng_jsonp__.__req'+ this.times + '.finished');
+    // params.set('callback', 'JSONP_CALLBACK')
+    this.times=this.times+1;
+    return this.jsonp.get(
+      this.baseUrl
+        + 'drinks/', {search: params})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;
         objects.forEach((drink: Drink) => {
           drinks.push(this.getDrinkFromJson(drink));
         });
+        console.log("Drinks");
+        console.log(drinks);
         return drinks;
       })
       .catch(this.handleError);
   }
-  search (term: string) {
-    let wikiUrl = 'http://en.wikipedia.org/w/api.php';
-    let params = new URLSearchParams();
-     params.set('search', term); // the user's search value
-     params.set('action', 'opensearch');
-    params.set('format', 'json');
-    params.set('callback', '__ng_jsonp__.__req$'+ this.times + '.finished');
-    // params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562');
-    this.times=this.times+1;
-// TODO: Add error handling
-    return this.jsonp
-      .get(wikiUrl, { search: params })
-      .map(response => <string[]> response.json()[1]);
-  }
+
   public searchForDrink(name: string): Observable<Drink[]> {
+    let headers = new Headers({  });
     let drinks: Drink[] = [];
-    return this.http
-      .get(this.proxyUrl
-        + this.baseUrl
-        + 'quickSearch/drinks/'
-        + name
-        + '/'
-        + this.apiCredentials
-        + this.language)
+    let params = new URLSearchParams();
+    params.set('format', 'json');
+    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562');
+    params.set('callback', '__ng_jsonp__.__req'+ this.times + '.finished');
+    // params.set('callback', 'JSONP_CALLBACK')
+    this.times=this.times+1;
+    return this.jsonp.get(
+      this.baseUrl
+      + 'quickSearch/drinks/'
+      + name, {search: params})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;
@@ -89,7 +85,13 @@ export class DrinkService {
     let videos: Video[] = [];
     obj.videos.forEach((vid: Video) => {
       videos.push(new Video(vid.video, vid.type));
+      if(vid.type == 'youtube'){
+        // obj.youtubeLink = vid.video;
+        let dangerousVideoUrl = 'https://www.youtube.com/embed/' + vid.video;
+        obj.youtubeLink = this.sanitizer.bypassSecurityTrustResourceUrl(dangerousVideoUrl);
+    }
     });
+
 
     let tags: Tag[] = [];
     obj.tags.forEach((tag: Tag) => {
@@ -128,7 +130,7 @@ export class DrinkService {
       actions.push(new Action(action.id, action.text));
     });
 
-    return new Drink(
+    let newDrink = new Drink(
       obj.description,
       obj.story,
       obj.color,
@@ -150,6 +152,8 @@ export class DrinkService {
       obj.name,
       obj.descriptionPlain
     );
+    newDrink.youtubeLink = obj.youtubeLink;
+    return newDrink;
   }
 
   private handleError (error: Response | any) {
