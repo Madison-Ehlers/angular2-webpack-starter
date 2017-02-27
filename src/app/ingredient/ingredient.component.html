@@ -1,0 +1,26 @@
+<div class="">
+  <md-card  class=" Aligner centered-item">
+    <md-card-header>
+      Ingredients
+    </md-card-header>
+    <p>Find Your Ingredients</p>
+    <p>Search after enter</p>
+    <div>
+      <input #term (keyup.enter)="searchForIngredient(term.value)"/>
+      <div style="" *ngIf="searching" class="loader">
+      </div>
+    </div>
+  </md-card>
+</div>
+<div *ngFor="let ingredient of ingredients">
+  <div class="Aligner centered-item">
+    <md-card>
+      <md-card-header>
+        <!--<img md-card-avatar src="http://assets.absolutdrinks.com/drinks/300x400/{{drink.id}}.png">-->
+        <md-card-title>{{ingredient.text}}</md-card-title>
+      </md-card-header>
+      <md-card-content>
+      </md-card-content>
+    </md-card>
+  </div>
+</div>

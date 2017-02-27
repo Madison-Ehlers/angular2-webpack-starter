@@ -22,21 +22,26 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
 export class DrinkService {
+  public ingredientTimes: number;
+  public drinkTimes: number;
   private baseUrl = 'http://addb.absolutdrinks.com/';
-  private times: number;
-
+  private nextUrl: string;
+  private prevUrl: string;
   constructor(private http: Http, private jsonp: Jsonp, private sanitizer: DomSanitizer) {
-    this.times = 0;
+    this.ingredientTimes = 0;
+    this.drinkTimes = 0;
   }
 
   public getAllIngredients(): Observable <Ingredient[]> {
     let ingredients: Ingredient[] = [];
     return this.jsonp.get(
-      this.baseUrl + 'ingredients/', {search: this.getParamsForRequest()})
+      this.baseUrl + 'ingredients/', {search: this.getParamsForIngredientRequest()})
       .map((res: Response) => {
         let body = res.json();
-        console.log(body);
-
+        let objects = body.result;
+        objects.forEach((ingred: Ingredient) => {
+          ingredients.push(this.getIngredientFromJson(ingred));
+        });
         return ingredients;
       });
   }
@@ -44,7 +49,7 @@ export class DrinkService {
     let drinks: Drink[] = [];
     return this.jsonp.get(
       this.baseUrl
-        + 'drinks/', {search: this.getParamsForRequest()})
+        + 'drinks/', {search: this.getParamsForDrinkRequest()})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;
@@ -61,22 +66,23 @@ export class DrinkService {
     return this.jsonp.get(
       this.baseUrl
       + 'quickSearch/ingredients/'
-      + name, {search: this.getParamsForRequest()})
+      + name, {search: this.getParamsForIngredientRequest()})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;
-        console.log(body);
+        objects.forEach((ingred: Ingredient) => {
+          ingredients.push(this.getIngredientFromJson(ingred));
+        });
         return ingredients;
       })
       .catch(this.handleError);
   }
-
   public searchForDrink(name: string): Observable<Drink[]> {
     let drinks: Drink[] = [];
     return this.jsonp.get(
       this.baseUrl
       + 'quickSearch/drinks/'
-      + name, {search: this.getParamsForRequest()})
+      + name, {search: this.getParamsForDrinkRequest()})
       .map((res: Response) => {
         let body = res.json();
         let objects = body.result;
@@ -88,6 +94,18 @@ export class DrinkService {
       .catch(this.handleError);
   }
 
+  private getIngredientFromJson(obj: any): Ingredient {
+    console.log(obj);
+    let ingred: Ingredient = new Ingredient();
+    ingred.description = obj.description;
+    ingred.id = obj.id;
+    ingred.isAlcoholic = obj.isAlcoholic;
+    ingred.type = obj.type;
+    ingred.text = obj.name;
+    ingred.textPlain = obj.textPlain;
+    ingred.isCarbonated = obj.isCarbonated;
+    return ingred;
+  }
   private getDrinkFromJson(obj: Drink): Drink {
     let skill = new Skill(obj.skill.id, obj.skill.name, obj.skill.value);
     let videos: Video[] = [];
@@ -160,6 +178,9 @@ export class DrinkService {
     newDrink.youtubeLink = obj.youtubeLink;
     return newDrink;
   }
+  public mycallback = function(data){
+    console.log(data);
+  }
 
   private handleError (error: Response | any) {
     console.log(error);
@@ -174,12 +195,22 @@ export class DrinkService {
     }
     return Observable.throw(errMsg);
   }
-  private getParamsForRequest(): URLSearchParams {
+  private getParamsForIngredientRequest(): URLSearchParams {
     let params = new URLSearchParams();
     params.set('format', 'json'); // json response
     params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562'); // api key
-    params.set('callback', '__ng_jsonp__.__req' + this.times + '.finished'); // callback
-    this.times = this.times + 1;
+    params.set('callback', '__ng_jsonp__.__req' + this.drinkTimes + '.finished'); // callback
+    this.drinkTimes = this.drinkTimes + 1;
+    return params;
+  }
+
+  private getParamsForDrinkRequest(): URLSearchParams {
+    let params = new URLSearchParams();
+    params.set('format', 'json'); // json response
+    params.set('apiKey', '8b097f6e64974a8a8f15d806c2888562'); // api key
+    params.set('callback', '__ng_jsonp__.__req' + this.drinkTimes + '.finished'); // callback
+    // params.set('callback', 'mycallback');
+    this.drinkTimes = this.drinkTimes + 1;
     return params;
   }
 }

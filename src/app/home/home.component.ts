@@ -12,7 +12,6 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'home',
   providers: [
-    DrinkService,
     Title
   ],
   // Our list of styles in our component. We may add more to compose many styles together
@@ -36,10 +35,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    this.drinkService.getAllIngredients()
-      .subscribe((ingredients) => {
-        console.log(ingredients);
-      });
+    console.log('home component init');
   }
 
   public submitState(value: string) {

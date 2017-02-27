@@ -28,12 +28,14 @@ import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { HomeComponent } from './home';
 import { AboutComponent } from './about';
-import { IngredientsComponent } from './ingredients';
 import { NoContentComponent } from './no-content';
 import { XLargeDirective } from './home/x-large';
+import { Jsonp } from '@angular/http'
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
+import { IngredientComponent } from './ingredient/ingredient.component';
+import { DrinkService } from './services/get-drinks.service';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -54,6 +56,7 @@ type StoreType = {
     AppComponent,
     AboutComponent,
     HomeComponent,
+    IngredientComponent,
     NoContentComponent,
     XLargeDirective
   ],
@@ -68,7 +71,8 @@ type StoreType = {
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    DrinkService
   ]
 })
 export class AppModule {
